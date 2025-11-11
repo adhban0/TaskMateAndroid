@@ -35,10 +35,20 @@ public class DBHelper extends SQLiteOpenHelper{
                 + COL_USER_HASHED + " TEXT NOT NULL"
                 + ");";
         db.execSQL(sqlUsers);
+        String sqlTasks = "CREATE TABLE IF NOT EXISTS " + TABLE_TASKS + " ("
+                + COL_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_TASK_TITLE + " TEXT NOT NULL, "
+                + COL_TASK_DESCRIPTION + " TEXT, "
+                + COL_TASK_DUE + " TEXT, "
+                + COL_TASK_COMPLETED + " INTEGER DEFAULT 0, "
+                + COL_TASK_USERNAME + " TEXT NOT NULL"
+                + ");";
+        db.execSQL(sqlTasks);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
         onCreate(db);
     }
     public long registerUser(User user) {
@@ -86,11 +96,10 @@ public class DBHelper extends SQLiteOpenHelper{
         cv.put(COL_USER_HASHED, user.getPassword());
         return db.insert(TABLE_USERS, null, cv);
     }
-    public long insertTask(String title, String description, LocalDateTime dueDate, boolean isCompleted, String username) {
+    public long insertTask(String title,  LocalDateTime dueDate, boolean isCompleted, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COL_TASK_TITLE, title);
-        cv.put(COL_TASK_DESCRIPTION, description);
         cv.put(COL_TASK_DUE, dueDate == null ? null : dueDate.format(ISO_FMT));
         cv.put(COL_TASK_COMPLETED, isCompleted ? 1 : 0);
         cv.put(COL_TASK_USERNAME, username);
@@ -112,12 +121,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 do {
                     int id = c.getInt(c.getColumnIndexOrThrow(COL_TASK_ID));
                     String title = c.getString(c.getColumnIndexOrThrow(COL_TASK_TITLE));
-                    String desc = c.getString(c.getColumnIndexOrThrow(COL_TASK_DESCRIPTION));
                     String dueText = c.getString(c.getColumnIndexOrThrow(COL_TASK_DUE));
                     LocalDateTime due = dueText == null ? null : LocalDateTime.parse(dueText, ISO_FMT);
                     boolean completed = c.getInt(c.getColumnIndexOrThrow(COL_TASK_COMPLETED)) != 0;
                     String u = c.getString(c.getColumnIndexOrThrow(COL_TASK_USERNAME));
-                    list.add(new Task(id, title, desc, due, completed, u));
+                    list.add(new Task(id, title, due, completed, u));
                 } while (c.moveToNext());
             }
         } finally {
@@ -136,6 +144,14 @@ public class DBHelper extends SQLiteOpenHelper{
     public int deleteTask(int taskId) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_TASKS, COL_TASK_ID + " = ?", new String[]{String.valueOf(taskId)});
+    }
+    public int updateTask(Task task) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TASK_TITLE, task.getTitle());
+        cv.put(COL_TASK_DUE, task.getDueDate() == null ? null : task.getDueDate().format(ISO_FMT));
+        return db.update(TABLE_TASKS, cv, COL_TASK_ID + " = ?", new String[]{String.valueOf(task.getId())});
+
     }
 
     @Override
