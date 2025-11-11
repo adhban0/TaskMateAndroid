@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TaskMate</string>
+    <string name="sign_up">Not yet registered? <b><u>Sign Up Now!</u></b></string>
 </resources>

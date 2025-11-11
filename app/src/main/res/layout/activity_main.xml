@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="Welcome Back!"
                 android:id="@+id/loginText"
                 android:textSize="36sp"
                 android:textAlignment="center"
@@ -90,7 +90,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Not yet registered? SignUp Now"
+        android:text="@string/sign_up"
+        android:
         android:textSize="14sp"
         android:textAlignment="center"
         android:id="@+id/signupText"
