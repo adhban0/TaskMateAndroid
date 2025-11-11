@@ -1,6 +1,7 @@
 package com.example.taskmate;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +43,12 @@ public class HomeActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        Drawable overflow = toolbar.getOverflowIcon();
+        if (overflow != null) {
+            overflow = DrawableCompat.wrap(overflow).mutate();
+            DrawableCompat.setTint(overflow, ContextCompat.getColor(this, R.color.white));
+            toolbar.setOverflowIcon(overflow);
+        }
         rv = findViewById(R.id.rvTasks);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TaskAdapter(tasks, new TaskAdapter.OnItemInteraction() {
@@ -143,10 +151,7 @@ public class HomeActivity extends AppCompatActivity {
             item.setChecked(showCompleted);
             loadTasks();
             return true;
-        } else if (id == R.id.action_about) {
-            Snackbar.make(findViewById(R.id.rootCoordinator), "TaskMate — simple task manager", Snackbar.LENGTH_LONG).show();
-            return true;
-        } else if (id == R.id.action_sign_out) {
+        }  else if (id == R.id.action_sign_out) {
             Snackbar.make(findViewById(R.id.rootCoordinator), "Sign out clicked", Snackbar.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
