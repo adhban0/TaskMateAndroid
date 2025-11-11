@@ -22,7 +22,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
 
     private List<Task> items;
     private OnItemInteraction listener;
-    private static final DateTimeFormatter ISO_FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final DateTimeFormatter ISO_FMT = DateTimeFormatter.ofPattern("MMMM d, yyyy");;
 
     public TaskAdapter(List<Task> items, OnItemInteraction listener) {
         this.items = items;

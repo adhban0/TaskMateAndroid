@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;    // <-- added
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,8 @@ public class AddEditTaskDialogFragment extends DialogFragment {
     private OnSaveListener listener;
 
     private EditText etTitle;
-    private EditText etDue;
+    // private EditText etDue; // removed
+    private DatePicker dpDue; // new
 
     public static AddEditTaskDialogFragment newInstance(@Nullable Task task) {
         AddEditTaskDialogFragment f = new AddEditTaskDialogFragment();
@@ -53,14 +55,27 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         LayoutInflater li = LayoutInflater.from(getContext());
         View v = li.inflate(R.layout.dialog_add_task, null);
         etTitle = v.findViewById(R.id.etTaskTitle);
-        etDue = v.findViewById(R.id.etTaskDue);
+        // etDue = v.findViewById(R.id.etTaskDue); // removed
+
+        // <-- NEW: find the DatePicker (replace EditText in layout)
+        dpDue = v.findViewById(R.id.datePicker);
 
         Bundle args = getArguments();
         if (args != null) {
             String title = args.getString(ARG_TASK_TITLE);
             String due = args.getString(ARG_TASK_DUE);
             if (title != null) etTitle.setText(title);
-            if (due != null) etDue.setText(due);
+
+            // If a due date was passed, parse and set DatePicker to that date
+            if (due != null) {
+                try {
+                    LocalDateTime ldt = LocalDateTime.parse(due, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    // DatePicker month is 0-based, LocalDateTime month is 1-based
+                    dpDue.updateDate(ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth());
+                } catch (Exception ex) {
+                    // ignore parse error and leave DatePicker at default (today)
+                }
+            }
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -74,20 +89,18 @@ public class AddEditTaskDialogFragment extends DialogFragment {
             Button bOk = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             bOk.setOnClickListener(view -> {
                 String title = etTitle.getText().toString().trim();
-                String dueText = etDue.getText().toString().trim();
+
                 if (TextUtils.isEmpty(title)) {
                     etTitle.setError("Title required");
                     return;
                 }
-                LocalDateTime due = null;
-                if (!TextUtils.isEmpty(dueText)) {
-                    try {
-                        due = LocalDateTime.parse(dueText, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    } catch (Exception ex) {
-                        etDue.setError("Use ISO format: yyyy-MM-ddTHH:mm:ss");
-                        return;
-                    }
-                }
+
+                // <-- NEW: read date from DatePicker and build LocalDateTime (time set to midnight)
+                int day = dpDue.getDayOfMonth();
+                int monthZeroBased = dpDue.getMonth(); // 0-based
+                int year = dpDue.getYear();
+                LocalDateTime due = LocalDateTime.of(year, monthZeroBased + 1, day, 0, 0, 0);
+
                 int id = args != null && args.containsKey(ARG_TASK_ID) ? args.getInt(ARG_TASK_ID) : 0;
                 // username will be set by MainActivity when saving
                 Task t = new Task(id, title, due, false, "");
