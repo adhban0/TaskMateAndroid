@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText username, password;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 String usernameText = username.getText().toString();
                 String passwordText = password.getText().toString();
                 if (usernameText.isEmpty() || passwordText.isEmpty() ) {
-                    Toast.makeText(MainActivity.this, "Please fill all fields", Toast.LENGTH_LONG).show();
+                    Snackbar.make(v, "Please fill all fields", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                     String hashedPassword =  PasswordUtil.hashPassword(password.getText().toString());
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("username", usernameText);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(MainActivity.this, "Wrong username or password",Toast.LENGTH_LONG).show();
+                        Snackbar.make(v, "Wrong username or password", Snackbar.LENGTH_LONG).show();
                     }
                 }
 

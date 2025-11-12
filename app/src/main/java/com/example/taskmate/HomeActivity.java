@@ -60,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemChecked(Task task, boolean checked) {
                 db.updateTaskCompletion(task.getId(), checked);
+                Snackbar.make(findViewById(R.id.rootCoordinator), "Task Completed", Snackbar.LENGTH_LONG).show();
                 // update local list and refresh
                 loadTasks();
             }
@@ -152,7 +153,6 @@ public class HomeActivity extends AppCompatActivity {
             loadTasks();
             return true;
         }  else if (id == R.id.action_sign_out) {
-            Snackbar.make(findViewById(R.id.rootCoordinator), "Sign out clicked", Snackbar.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             return true;

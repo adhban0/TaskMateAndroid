@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class Register extends AppCompatActivity {
 
     EditText username, password, confirmPassword;
@@ -35,22 +37,22 @@ public class Register extends AppCompatActivity {
                 String passwordText = password.getText().toString();
                 String confirmPasswordText = confirmPassword.getText().toString();
                 if (usernameText.isEmpty() || passwordText.isEmpty() || confirmPasswordText.isEmpty()) {
-                    Toast.makeText(Register.this, "Please fill all fields", Toast.LENGTH_LONG).show();
+                    Snackbar.make(v, "Please fill all fields", Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
                     if (!passwordText.equals(confirmPasswordText)) {
-                        Toast.makeText(Register.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+                        Snackbar.make(v, "Passwords do not match", Snackbar.LENGTH_LONG).show();
                         return;
                     }
                     String hashedPassword = PasswordUtil.hashPassword(password.getText().toString());
                     User currentUser = new User(usernameText,hashedPassword);
                     long result = dbHelper.registerUser(currentUser);
                     if (result == -1) {
-                        Toast.makeText(Register.this, "Username already exists", Toast.LENGTH_LONG).show();
+                        Snackbar.make(v, "Username already exists", Snackbar.LENGTH_LONG).show();
                     }
                         else {
-                        Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_LONG).show();
+                        Snackbar.make(v, "Registration successful", Snackbar.LENGTH_LONG).show();
                         Intent intent = new Intent(Register.this, MainActivity.class);
                         startActivity(intent);
                     }
