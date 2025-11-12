@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                         intent.putExtra("username", usernameText);
                         startActivity(intent);
+                        finish();
                     } else {
                         Snackbar.make(v, "Wrong username or password", Snackbar.LENGTH_LONG).show();
                     }
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Register.class);
                 startActivity(intent);
+                finish();
             }
         });
 

@@ -5,12 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -19,9 +20,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -106,6 +107,26 @@ public class HomeActivity extends AppCompatActivity {
         new ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(rv);
 
         loadTasks();
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                new AlertDialog.Builder(HomeActivity.this)
+                        .setTitle("Exit App")
+                        .setMessage("Are you sure you want to sign out?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            // Exit the app
+                            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
+        // ... the rest of your onCreate method
     }
 
     private void openAddDialog() {
@@ -153,9 +174,22 @@ public class HomeActivity extends AppCompatActivity {
             loadTasks();
             return true;
         }  else if (id == R.id.action_sign_out) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            return true;
+            AtomicBoolean yes = new AtomicBoolean(false);
+            new AlertDialog.Builder(HomeActivity.this)
+                    .setTitle("Exit App")
+                    .setMessage("Are you sure you want to sign out?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        // Exit the app
+                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        yes.set(true);
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            if (yes.get()) {
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

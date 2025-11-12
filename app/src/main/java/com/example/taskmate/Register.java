@@ -55,6 +55,7 @@ public class Register extends AppCompatActivity {
                         Snackbar.make(v, "Registration successful", Snackbar.LENGTH_LONG).show();
                         Intent intent = new Intent(Register.this, MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
 
             }
