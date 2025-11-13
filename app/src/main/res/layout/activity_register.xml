@@ -11,20 +11,21 @@
     android:background="@color/purple"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
         android:padding="8dp"
-        android:text="TaskMate"
-        android:textSize="42sp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:contentDescription="App Logo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/taskmate_logo"
         android:layout_marginBottom="20dp"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp"
         android:background="@drawable/custom_edittext">
