@@ -47,7 +47,7 @@ public class Register extends AppCompatActivity {
                     }
                     String hashedPassword = PasswordUtil.hashPassword(password.getText().toString());
                     User currentUser = new User(usernameText,hashedPassword);
-                    long result = dbHelper.registerUser(currentUser);
+                    long result = dbHelper.registerUser(currentUser); // change data type
                     if (result == -1) {
                         Snackbar.make(v, "Username already exists", Snackbar.LENGTH_LONG).show();
                     }

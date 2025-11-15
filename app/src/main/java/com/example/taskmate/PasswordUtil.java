@@ -9,7 +9,7 @@ public class PasswordUtil {
             byte[] hash = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
             for (byte b : hash) {
-                sb.append(String.format("%02x", b));
+                sb.append(String.format("%02x", b)); // hexadecimal
             }
             return sb.toString();
         } catch (Exception e) {

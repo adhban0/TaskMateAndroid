@@ -50,6 +50,7 @@ public class HomeActivity extends AppCompatActivity {
             DrawableCompat.setTint(overflow, ContextCompat.getColor(this, R.color.white));
             toolbar.setOverflowIcon(overflow);
         }
+        // find a Toolbar in the layout, set it as the app's primary app bar, and then change the color of its overflow menu icon (the "three dots") to white.
         rv = findViewById(R.id.rvTasks);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TaskAdapter(tasks, new TaskAdapter.OnItemInteraction() {
@@ -62,13 +63,12 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemChecked(Task task, boolean checked) {
                 db.updateTaskCompletion(task.getId(), checked);
                 Snackbar.make(findViewById(R.id.rootCoordinator), "Task Completed", Snackbar.LENGTH_LONG).show();
-                // update local list and refresh
                 loadTasks();
             }
 
             @Override
             public void onItemLongPressed(int position) {
-                // not using selection now; placeholder if you want multi-select
+                // remove it (unneeded)
             }
         });
         rv.setAdapter(adapter);
@@ -77,14 +77,14 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> openAddDialog());
 
         // Swipe to delete
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) { // 0 means drag and drop is disabled
             Task recentlyDeletedTask = null;
             int recentlyDeletedPosition = -1;
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
-            }
+            }// drag and drop method
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
@@ -97,25 +97,22 @@ public class HomeActivity extends AppCompatActivity {
 
                 Snackbar.make(findViewById(R.id.rootCoordinator), "Task deleted", Snackbar.LENGTH_LONG)
                         .setAction("Undo", v -> {
-                            // re-insert task (simple approach)
                             Task t = recentlyDeletedTask;
                             db.insertTask(t.getTitle(),  t.getDueDate(), t.isCompleted(), username);
                             loadTasks();
                         }).show();
             }
         };
-        new ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(rv);
+        new ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(rv); // creates a new instance of ItemTouchHelper, configured with your custom logic defined in the simpleItemTouchCallback object and attaches to the recycler view
 
-        loadTasks();
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+        // handle back press
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // Handle the back button event
                 new AlertDialog.Builder(HomeActivity.this)
                         .setTitle("Exit App")
                         .setMessage("Are you sure you want to sign out?")
                         .setPositiveButton("Yes", (dialog, which) -> {
-                            // Exit the app
                             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -126,7 +123,7 @@ public class HomeActivity extends AppCompatActivity {
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
-        // ... the rest of your onCreate method
+        loadTasks(); // only executed here to show tasks
     }
 
     private void openAddDialog() {
@@ -154,31 +151,31 @@ public class HomeActivity extends AppCompatActivity {
             if (!showCompleted && t.isCompleted()) continue;
             tasks.add(t);
         }
-        adapter.setItems(tasks);
+        adapter.setItems(tasks);//better than notifyDatasetChanged
     }
-
+// overflow menu is rooted in android system that's why the methods are found in the parent class "AppCompatActivity"
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);//show the menu resource
         MenuItem item = menu.findItem(R.id.action_show_completed);
-        item.setChecked(showCompleted);
-        return true;
-    }
+        item.setChecked(showCompleted);// to set whether completed are shown or not
+        return true;// show the menu
+    }// this is called when the menu needs to be created
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_completed) {
-            showCompleted = !item.isChecked();
+            showCompleted = !item.isChecked();//because item's state doesn't change automatically, only manually
             item.setChecked(showCompleted);
             loadTasks();
             return true;
         }  else if (id == R.id.action_sign_out) {
-            AtomicBoolean yes = new AtomicBoolean(false);
+            AtomicBoolean yes = new AtomicBoolean(false);//boolean that can run in a different thread
             new AlertDialog.Builder(HomeActivity.this)
                     .setTitle("Exit App")
                     .setMessage("Are you sure you want to sign out?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
+                    .setPositiveButton("Yes", (dialog, which) -> {//which dialog, which button
                         // Exit the app
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -191,12 +188,12 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item); //if none of the options were selected, implement default behavior
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        super.onDestroy();//cleanup memory, etc
         db.close();
     }
 }

@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 public class DBHelper extends SQLiteOpenHelper{
-    private static final String DB_NAME = "liudb";
-    private static final int DB_VERSION = 1;
     public static final String TABLE_USERS = "users";
     public static final String TABLE_TASKS = "tasks";
 
@@ -26,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final DateTimeFormatter ISO_FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public DBHelper(Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
+        super(context, "liudb", null, 1);
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -50,7 +48,7 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
         onCreate(db);
-    }
+    }// in case of upgrading the db to a new version
     public long registerUser(User user) {
         if (userExists(user.getUsername())) {
             return -1;
@@ -58,15 +56,15 @@ public class DBHelper extends SQLiteOpenHelper{
         return insertUser(user);
     }
     public boolean userExists(String username) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();//read-only
         Cursor c = null;
         try {
             c = db.query(TABLE_USERS, new String[]{COL_USER_USERNAME},
                     COL_USER_USERNAME + " = ?", new String[]{username},
-                    null, null, null, "1");
+                    null, null, null, "1");//table name, columns, where clause, where clause args, group by, having, order by, limit
             return (c != null && c.moveToFirst());
         } finally {
-            if (c != null) c.close();
+            if (c != null) c.close();//close the cursor to prevent memory leak
         }
     }
     public boolean validateUser(User user) {
@@ -90,11 +88,11 @@ public class DBHelper extends SQLiteOpenHelper{
         }
     }
     private long insertUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = this.getWritableDatabase();// read and write
+        ContentValues cv = new ContentValues();// store key-value pairs that can be processed by the db object
         cv.put(COL_USER_USERNAME, user.getUsername());
         cv.put(COL_USER_HASHED, user.getPassword());
-        return db.insert(TABLE_USERS, null, cv);
+        return db.insert(TABLE_USERS, null, cv); //If the ContentValues object cv is empty, this parameter specifies a column name where a NULL value will be explicitly inserted. In this code, it's set to null, meaning no row will be inserted if cv is empty.
     }
     public long insertTask(String title,  LocalDateTime dueDate, boolean isCompleted, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -107,7 +105,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public List<Task> getTasksByUser(String username) {
-        List<Task> list = new ArrayList<>();
+        List<Task> list = new ArrayList<>();// in case you wanted to change from arraylist to another type
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = null;
         try {
@@ -119,7 +117,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     COL_TASK_DUE + " ASC");
             if (c != null && c.moveToFirst()) {
                 do {
-                    int id = c.getInt(c.getColumnIndexOrThrow(COL_TASK_ID));
+                    int id = c.getInt(c.getColumnIndexOrThrow(COL_TASK_ID));// throws an exception
                     String title = c.getString(c.getColumnIndexOrThrow(COL_TASK_TITLE));
                     String dueText = c.getString(c.getColumnIndexOrThrow(COL_TASK_DUE));
                     LocalDateTime due = dueText == null ? null : LocalDateTime.parse(dueText, ISO_FMT);
@@ -157,5 +155,5 @@ public class DBHelper extends SQLiteOpenHelper{
     @Override
     public synchronized void close() {
         super.close();
-    }
+    }// synchronized means only one thread can execute this method on a particular instance at a time, close all connections (overriden just to make sure)
 }

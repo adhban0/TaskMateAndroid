@@ -8,3 +8,4 @@
     <corners
         android:radius="20dp"/>
 </shape>
+<!--a graphic resource, used as background to elements, stroke is border-->

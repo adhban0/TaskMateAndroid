@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                         intent.putExtra("username", usernameText);
                         startActivity(intent);
-                        finish();
+                        finish(); // disallow swipe back
                     } else {
                         Snackbar.make(v, "Wrong username or password", Snackbar.LENGTH_LONG).show();
                     }

@@ -20,22 +20,24 @@ import java.time.format.DateTimeFormatter;
 
 public class AddEditTaskDialogFragment extends DialogFragment {
 
+    //to pass task from dialog to homeactivity
     public interface OnSaveListener {
-        void onSave(Task task); // task.id == 0 for new
+        void onSave(Task task);
     }
 
-    private static final String ARG_TASK_ID = "arg_task_id";
+    private static final String ARG_TASK_ID = "arg_task_id";// change to hard coded
     private static final String ARG_TASK_TITLE = "arg_task_title";
-    private static final String ARG_TASK_DUE = "arg_task_due"; // ISO string or null
+    private static final String ARG_TASK_DUE = "arg_task_due";
+    //h
     private OnSaveListener listener;
 
     private EditText etTitle;
-    // private EditText etDue; // removed
-    private DatePicker dpDue; // new
+    private DatePicker dpDue;
 
+    //creates dialog fragments
     public static AddEditTaskDialogFragment newInstance(@Nullable Task task) {
         AddEditTaskDialogFragment f = new AddEditTaskDialogFragment();
-        Bundle b = new Bundle();
+        Bundle b = new Bundle();//pass data between android components
         if (task != null) {
             b.putInt(ARG_TASK_ID, task.getId());
             b.putString(ARG_TASK_TITLE, task.getTitle());
@@ -55,25 +57,20 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         LayoutInflater li = LayoutInflater.from(getContext());
         View v = li.inflate(R.layout.dialog_add_task, null);
         etTitle = v.findViewById(R.id.etTaskTitle);
-        // etDue = v.findViewById(R.id.etTaskDue); // removed
-
-        // <-- NEW: find the DatePicker (replace EditText in layout)
         dpDue = v.findViewById(R.id.datePicker);
 
         Bundle args = getArguments();
-        if (args != null) {
+        if (args != null) {//null when task is created
             String title = args.getString(ARG_TASK_TITLE);
             String due = args.getString(ARG_TASK_DUE);
             if (title != null) etTitle.setText(title);
 
-            // If a due date was passed, parse and set DatePicker to that date
             if (due != null) {
                 try {
                     LocalDateTime ldt = LocalDateTime.parse(due, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                     // DatePicker month is 0-based, LocalDateTime month is 1-based
                     dpDue.updateDate(ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth());
                 } catch (Exception ex) {
-                    // ignore parse error and leave DatePicker at default (today)
                 }
             }
         }
@@ -81,7 +78,7 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(v)
                 .setTitle(args != null && args.containsKey(ARG_TASK_ID) ? "Edit task" : "Add task")
-                .setNegativeButton("Cancel", (d, i) -> dismiss())
+                .setNegativeButton("Cancel", (d, i) -> dismiss())// i means which button
                 .setPositiveButton("Save", null); // override later to prevent auto-dismiss
 
         AlertDialog dialog = builder.create();

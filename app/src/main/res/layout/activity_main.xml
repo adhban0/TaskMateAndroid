@@ -19,7 +19,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/taskmate_logo"
         android:layout_marginBottom="20dp"/>
-
+<!--Visual impairements, scaling-->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp"
         android:background="@drawable/custom_edittext">
-
+<!--depth for shadow, a rectangle with rounded corners as a background-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:textColor="@color/black"
                 android:textColorHighlight="@color/cardview_dark_background"
                 android:layout_marginTop="40dp"/>
-
+<!--color when text is highlighted-->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"

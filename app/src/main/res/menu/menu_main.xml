@@ -12,3 +12,4 @@
         android:title="Sign out"
         app:showAsAction="never" />
 </menu>
+<!-- menu, menu items, item with checkbox, shown as overflow menu not action button-->

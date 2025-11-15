@@ -41,7 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
     @NonNull
     @Override
     public TaskVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false);// add context as a variable and pass it to the constructor
         return new TaskVH(v);
     }
 
@@ -50,13 +50,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
         Task t = items.get(position);
         holder.title.setText(t.getTitle());
         if (t.getDueDate() != null) {
-            // Show ISO or you can format nicer as you like
             holder.due.setText("Due: " + t.getDueDate().format(ISO_FMT));
             holder.due.setVisibility(View.VISIBLE);
         } else {
             holder.due.setVisibility(View.GONE);
         }
-        holder.checkBox.setOnCheckedChangeListener(null); // avoid callback during bind
+        holder.checkBox.setOnCheckedChangeListener(null); // avoid updating data of previous recycled items (detach the listener)
         holder.checkBox.setChecked(t.isCompleted());
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClicked(t);
@@ -81,7 +80,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
 
         TaskVH(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.tvTaskTitle);
+            title = itemView.findViewById(R.id.tvTaskTitle);// change ids
             due = itemView.findViewById(R.id.tvTaskDue);
             checkBox = itemView.findViewById(R.id.cbCompleted);
         }

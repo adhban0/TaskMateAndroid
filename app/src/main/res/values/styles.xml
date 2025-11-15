@@ -6,3 +6,4 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorAccent">@color/purple</item>
     </style></resources>
+<!--resource is the root element for any resources xml file like strings, colors, etc/ style specifies the attributes for an element, parent inherits from another theme, item sets the value of an attribute-->

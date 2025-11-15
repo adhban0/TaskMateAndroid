@@ -15,13 +15,14 @@
             android:id="@+id/toolbar"
             android:background="@color/purple"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             app:title="TaskMate"
             app:titleTextColor="@color/white"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:paddingTop="18dp"
             />
     </com.google.android.material.appbar.AppBarLayout>
+<!--container for toolbar to enable features like the bar collapsing or hiding as the user scrolls through content, toolbar, makes height the standard height of any toolbar-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTasks"
@@ -40,5 +41,6 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:layout_anchor="@id/rvTasks"
         app:layout_anchorGravity="bottom|end" />
+<!--    the drawable resource (like image view), anchors to the recycler view's bottom right-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
