@@ -14,19 +14,14 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
 
-    public interface OnItemInteraction {
-        void onItemClicked(Task task);
-        void onItemChecked(Task task, boolean checked);
-        void onItemLongPressed(int position);
-    }
+    private HomeActivity activity; // Changed from OnItemInteraction listener
 
     private List<Task> items;
-    private OnItemInteraction listener;
     private static final DateTimeFormatter ISO_FMT = DateTimeFormatter.ofPattern("MMMM d, yyyy");;
 
-    public TaskAdapter(List<Task> items, OnItemInteraction listener) {
+    public TaskAdapter(List<Task> items, HomeActivity activity) {
         this.items = items;
-        this.listener = listener;
+        this.activity = activity;
     }
 
     public void setItems(List<Task> items) {
@@ -58,14 +53,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
         holder.checkBox.setOnCheckedChangeListener(null); // avoid updating data of previous recycled items (detach the listener)
         holder.checkBox.setChecked(t.isCompleted());
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onItemClicked(t);
-        });
-        holder.itemView.setOnLongClickListener(v -> {
-            if (listener != null) listener.onItemLongPressed(holder.getAdapterPosition());
-            return true;
+            activity.onTaskItemClicked(t);
         });
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (listener != null) listener.onItemChecked(t, isChecked);
+            activity.onTaskItemChecked(t, isChecked);
         });
     }
 

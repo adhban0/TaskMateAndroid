@@ -21,15 +21,12 @@ import java.time.format.DateTimeFormatter;
 public class AddEditTaskDialogFragment extends DialogFragment {
 
     //to pass task from dialog to homeactivity
-    public interface OnSaveListener {
-        void onSave(Task task);
-    }
+
 
     private static final String ARG_TASK_ID = "arg_task_id";// change to hard coded
     private static final String ARG_TASK_TITLE = "arg_task_title";
     private static final String ARG_TASK_DUE = "arg_task_due";
     //h
-    private OnSaveListener listener;
 
     private EditText etTitle;
     private DatePicker dpDue;
@@ -47,9 +44,7 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         return f;
     }
 
-    public void setOnSaveListener(OnSaveListener l) {
-        this.listener = l;
-    }
+
 
     @NonNull
     @Override
@@ -92,19 +87,19 @@ public class AddEditTaskDialogFragment extends DialogFragment {
                     return;
                 }
 
-                // <-- NEW: read date from DatePicker and build LocalDateTime (time set to midnight)
                 int day = dpDue.getDayOfMonth();
-                int monthZeroBased = dpDue.getMonth(); // 0-based
+                int monthZeroBased = dpDue.getMonth();
                 int year = dpDue.getYear();
                 LocalDateTime due = LocalDateTime.of(year, monthZeroBased + 1, day, 0, 0, 0);
 
                 int id = args != null && args.containsKey(ARG_TASK_ID) ? args.getInt(ARG_TASK_ID) : 0;
                 // username will be set by MainActivity when saving
                 Task t = new Task(id, title, due, false, "");
-                if (listener != null) {
-                    listener.onSave(t);
+                HomeActivity activity = (HomeActivity) getActivity();// get current activity not a new class
+                if (activity != null) {
+                    activity.saveTask(t);
                 }
-                dismiss();
+                dismiss(); //close the fragment
             });
         });
 
@@ -114,6 +109,6 @@ public class AddEditTaskDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        // listener set by activity explicitly
+        // to establish a connection with the main activity
     }
 }

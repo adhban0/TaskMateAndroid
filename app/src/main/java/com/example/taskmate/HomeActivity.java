@@ -53,24 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         // find a Toolbar in the layout, set it as the app's primary app bar, and then change the color of its overflow menu icon (the "three dots") to white.
         rv = findViewById(R.id.rvTasks);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TaskAdapter(tasks, new TaskAdapter.OnItemInteraction() {
-            @Override
-            public void onItemClicked(Task task) {
-                openEditDialog(task);
-            }
-
-            @Override
-            public void onItemChecked(Task task, boolean checked) {
-                db.updateTaskCompletion(task.getId(), checked);
-                Snackbar.make(findViewById(R.id.rootCoordinator), "Task Completed", Snackbar.LENGTH_LONG).show();
-                loadTasks();
-            }
-
-            @Override
-            public void onItemLongPressed(int position) {
-                // remove it (unneeded)
-            }
-        });
+        adapter = new TaskAdapter(tasks, this);
         rv.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fabAdd);
@@ -128,19 +111,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private void openAddDialog() {
         AddEditTaskDialogFragment dlg = AddEditTaskDialogFragment.newInstance(null);
-        dlg.setOnSaveListener(task -> {
-            db.insertTask(task.getTitle(),  task.getDueDate(), false, username);
-            loadTasks();
-        });
         dlg.show(getSupportFragmentManager(), "add_task");
     }
 
     private void openEditDialog(Task task) {
         AddEditTaskDialogFragment dlg = AddEditTaskDialogFragment.newInstance(task);
-        dlg.setOnSaveListener(edited -> {
-            db.updateTask(task);
-            loadTasks();
-        });
         dlg.show(getSupportFragmentManager(), "edit_task");
     }
 
@@ -190,7 +165,25 @@ public class HomeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item); //if none of the options were selected, implement default behavior
     }
+    public void saveTask(Task task) {
+        if (task.getId() == 0) {
+            db.insertTask(task.getTitle(), task.getDueDate(), false, username);
+        } else {
+            db.updateTask(task);
+        }
+        loadTasks();
+    }
+    public void onTaskItemClicked(Task task) {
+        openEditDialog(task);
+    }
 
+    // Method to handle checkbox change
+    public void onTaskItemChecked(Task task, boolean isChecked) {
+        db.updateTaskCompletion(task.getId(), isChecked);
+        if (isChecked)
+        {Snackbar.make(findViewById(R.id.rootCoordinator), "Task Completed", Snackbar.LENGTH_LONG).show();}
+        loadTasks();
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();//cleanup memory, etc
