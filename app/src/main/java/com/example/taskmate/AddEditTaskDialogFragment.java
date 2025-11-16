@@ -53,6 +53,8 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         View v = li.inflate(R.layout.dialog_add_task, null);
         etTitle = v.findViewById(R.id.etTaskTitle);
         dpDue = v.findViewById(R.id.datePicker);
+        long now = System.currentTimeMillis();
+        dpDue.setMinDate(now);
 
         Bundle args = getArguments();
         if (args != null) {//null when task is created

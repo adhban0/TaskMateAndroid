@@ -7,9 +7,12 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
@@ -37,27 +40,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
     @Override
     public TaskVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false);// add context as a variable and pass it to the constructor
-        return new TaskVH(v);
+        return new TaskVH(v, activity);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskVH holder, int position) {
         Task t = items.get(position);
-        holder.title.setText(t.getTitle());
-        if (t.getDueDate() != null) {
-            holder.due.setText("Due: " + t.getDueDate().format(ISO_FMT));
-            holder.due.setVisibility(View.VISIBLE);
-        } else {
-            holder.due.setVisibility(View.GONE);
-        }
-        holder.checkBox.setOnCheckedChangeListener(null); // avoid updating data of previous recycled items (detach the listener)
-        holder.checkBox.setChecked(t.isCompleted());
-        holder.itemView.setOnClickListener(v -> {
-            activity.onTaskItemClicked(t);
-        });
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            activity.onTaskItemChecked(t, isChecked);
-        });
+        holder.bind(t);
     }
 
     @Override
@@ -68,12 +57,57 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
     static class TaskVH extends RecyclerView.ViewHolder {
         TextView title, due;
         CheckBox checkBox;
+        private final HomeActivity activity;
 
-        TaskVH(@NonNull View itemView) {
+        TaskVH(@NonNull View itemView, HomeActivity activity) {
             super(itemView);
             title = itemView.findViewById(R.id.tvTaskTitle);// change ids
             due = itemView.findViewById(R.id.tvTaskDue);
             checkBox = itemView.findViewById(R.id.cbCompleted);
+            this.activity = activity;
+        }
+        void bind(Task t) {
+            title.setText(t.getTitle());
+            checkBox.setOnCheckedChangeListener(null); // to override later
+            checkBox.setChecked(t.isCompleted());
+
+            if (t.getDueDate() != null) {
+                due.setText("Due: " + t.getDueDate().format(ISO_FMT));
+                due.setVisibility(View.VISIBLE);
+            } else {
+                due.setVisibility(View.GONE);
+            }
+
+            updateBackgroundColor(t);
+            itemView.setOnClickListener(v -> activity.onTaskItemClicked(t));
+
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                activity.onTaskItemChecked(t, isChecked);
+                updateBackgroundColor(t); // Recalculate color based on the new state
+            });
+        }
+        private void updateBackgroundColor(Task task) {
+            int color;
+            if (task.isCompleted()) {
+                color = ContextCompat.getColor(activity, R.color.white);
+            } else {
+                if (task.getDueDate() != null) {
+                    LocalDate today = LocalDate.now();
+                    LocalDate dueDate = task.getDueDate().toLocalDate();
+                    long daysBetween = ChronoUnit.DAYS.between(today, dueDate);
+
+                    if (dueDate.isBefore(today)) {
+                        color = ContextCompat.getColor(activity, R.color.task_overdue_dark_red);
+                    } else if (daysBetween <= 3) {
+                        color = ContextCompat.getColor(activity, R.color.task_due_soon_red);
+                    } else {
+                        color = ContextCompat.getColor(activity, R.color.task_due_far_green);
+                    }
+                } else {
+                    color = ContextCompat.getColor(activity, R.color.white);
+                }
+            }
+            itemView.setBackgroundColor(color);
         }
     }
 }
