@@ -20,23 +20,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class AddEditTaskDialogFragment extends DialogFragment {
-
-    //to pass task from dialog to homeactivity
-
-
-    private static final String ARG_TASK_ID = "arg_task_id";// change to hard coded
+    private static final String ARG_TASK_ID = "arg_task_id";
     private static final String ARG_TASK_TITLE = "arg_task_title";
     private static final String ARG_TASK_DUE = "arg_task_due";
     //h
 
     private EditText etTitle;
-    private SwitchCompat switchDueDate; // <-- Add Switch reference
+    private SwitchCompat switchDueDate;
     private DatePicker dpDue;
 
     //creates dialog fragments
     public static AddEditTaskDialogFragment newInstance(@Nullable Task task) {
         AddEditTaskDialogFragment f = new AddEditTaskDialogFragment();
-        Bundle b = new Bundle();//pass data between android components
+        Bundle b = new Bundle();//pass data between android components like intent
         if (task != null) {
             b.putInt(ARG_TASK_ID, task.getId());
             b.putString(ARG_TASK_TITLE, task.getTitle());
@@ -47,14 +43,14 @@ public class AddEditTaskDialogFragment extends DialogFragment {
     }
 
 
-
+// called when dialog is created in previous method
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         LayoutInflater li = LayoutInflater.from(getContext());
         View v = li.inflate(R.layout.dialog_add_task, null);
         etTitle = v.findViewById(R.id.etTaskTitle);
-        switchDueDate = v.findViewById(R.id.switchDueDate); // <-- Initialize Switch
+        switchDueDate = v.findViewById(R.id.switchDueDate);
         dpDue = v.findViewById(R.id.datePicker);
         long now = System.currentTimeMillis();
         dpDue.setMinDate(now);
@@ -64,7 +60,7 @@ public class AddEditTaskDialogFragment extends DialogFragment {
             String title = args.getString(ARG_TASK_TITLE);
             String due = args.getString(ARG_TASK_DUE);
             if (title != null) etTitle.setText(title);
-
+            // if due is null, dp will stay invisible and switch will stay unchecked (their defaults)
             if (due != null) {
                 switchDueDate.setChecked(true);
                 dpDue.setVisibility(View.VISIBLE);
@@ -78,16 +74,17 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         switchDueDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
             dpDue.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
+        // builder of the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(v)
                 .setTitle(args != null && args.containsKey(ARG_TASK_ID) ? "Edit task" : "Add task")
                 .setNegativeButton("Cancel", (d, i) -> dismiss())// i means which button
                 .setPositiveButton("Save", null); // override later to prevent auto-dismiss
 
-        AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(d -> {
-            Button bOk = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            bOk.setOnClickListener(view -> {
+        AlertDialog dialog = builder.create(); // build the dialog and store it in this alertdialog object
+        dialog.setOnShowListener(d -> { // onshowlistener executes code when dialog is shown
+            Button save = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            save.setOnClickListener(view -> {
                 String title = etTitle.getText().toString().trim();
 
                 if (TextUtils.isEmpty(title)) {

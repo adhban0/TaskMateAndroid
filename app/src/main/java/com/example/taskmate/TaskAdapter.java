@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
 
-    private HomeActivity activity; // Changed from OnItemInteraction listener
+    private HomeActivity activity;
 
     private List<Task> items;
     private static final DateTimeFormatter ISO_FMT = DateTimeFormatter.ofPattern("MMMM d, yyyy");;
@@ -39,7 +39,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
     @NonNull
     @Override
     public TaskVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false);// add context as a variable and pass it to the constructor
+        View v = LayoutInflater.from(activity).inflate(R.layout.item_task, parent, false);
         return new TaskVH(v, activity);
     }
 
@@ -83,7 +83,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskVH> {
 
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 activity.onTaskItemChecked(t, isChecked);
-                updateBackgroundColor(t); // Recalculate color based on the new state
+                updateBackgroundColor(t);
             });
         }
         private void updateBackgroundColor(Task task) {

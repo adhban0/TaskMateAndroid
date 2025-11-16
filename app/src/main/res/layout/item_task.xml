@@ -8,38 +8,39 @@
     android:elevation="2dp"
     android:padding="8dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp">
-<!--can be replaced by constraint view-->
         <TextView
             android:id="@+id/tvTaskTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="Task title"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/cbCompleted"
-            android:layout_marginEnd="8dp"/>
+            app:layout_constraintEnd_toStartOf="@+id/cbCompleted"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvTaskDue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Due: 2025-11-12T15:30"
-            android:layout_below="@id/tvTaskTitle"
-            android:layout_alignParentStart="true"
             android:layout_marginTop="4dp"
-            android:textSize="12sp"/>
+            android:text="Due: 2025-11-12T15:30"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTaskTitle" />
 
         <CheckBox
             android:id="@+id/cbCompleted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
-    </RelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

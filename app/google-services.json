@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "28791598008",
+    "project_id": "taskmate-raafat",
+    "storage_bucket": "taskmate-raafat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28791598008:android:7622f05161f08c8c953d4d",
+        "android_client_info": {
+          "package_name": "com.example.taskmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVxoUz_sl2EViBYvse5sFoy_kKjjUwSQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

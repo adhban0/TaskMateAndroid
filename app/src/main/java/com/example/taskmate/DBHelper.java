@@ -17,8 +17,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public static final String COL_USER_HASHED = "hashed_password";
     public static final String COL_TASK_ID = "id";
     public static final String COL_TASK_TITLE = "title";
-    public static final String COL_TASK_DESCRIPTION = "description";
-    public static final String COL_TASK_DUE = "due_date";          
+    public static final String COL_TASK_DUE = "due_date";
     public static final String COL_TASK_COMPLETED = "is_completed";
     public static final String COL_TASK_USERNAME = "username";
     private static final DateTimeFormatter ISO_FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -36,7 +35,6 @@ public class DBHelper extends SQLiteOpenHelper{
         String sqlTasks = "CREATE TABLE IF NOT EXISTS " + TABLE_TASKS + " ("
                 + COL_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COL_TASK_TITLE + " TEXT NOT NULL, "
-                + COL_TASK_DESCRIPTION + " TEXT, "
                 + COL_TASK_DUE + " TEXT, "
                 + COL_TASK_COMPLETED + " INTEGER DEFAULT 0, "
                 + COL_TASK_USERNAME + " TEXT NOT NULL"
@@ -110,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor c = null;
         try {
             c = db.query(TABLE_TASKS,
-                    null,
+                    null, // select all columns
                     COL_TASK_USERNAME + " = ?",
                     new String[]{username},
                     null, null,

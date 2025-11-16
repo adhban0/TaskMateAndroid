@@ -29,27 +29,15 @@ public class Task {
         return this.title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
-        this.dueDate = dueDate;
-    }
 
     public boolean isCompleted() {
         return isCompleted;
     }
 
-    public void markCompleted() {
-        isCompleted = true;
-    }
 
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
-    }
 }

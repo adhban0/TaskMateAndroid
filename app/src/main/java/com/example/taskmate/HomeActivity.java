@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Drawable overflow = toolbar.getOverflowIcon();
         if (overflow != null) {
-            overflow = DrawableCompat.wrap(overflow).mutate();
+            overflow = DrawableCompat.wrap(overflow).mutate();//overflow menu icon
             DrawableCompat.setTint(overflow, ContextCompat.getColor(this, R.color.white));
             toolbar.setOverflowIcon(overflow);
         }
@@ -104,14 +104,14 @@ public class HomeActivity extends AppCompatActivity {
                         .show();
             }
         };
-        getOnBackPressedDispatcher().addCallback(this, callback);
+        getOnBackPressedDispatcher().addCallback(this, callback); // calls this method (from parent classes) configured with your custom logic defined in the callback object and attaches to the home activity
 
         loadTasks(); // only executed here to show tasks
     }
 
     private void openAddDialog() {
-        AddEditTaskDialogFragment dlg = AddEditTaskDialogFragment.newInstance(null);
-        dlg.show(getSupportFragmentManager(), "add_task");
+        AddEditTaskDialogFragment dlg = AddEditTaskDialogFragment.newInstance(null);// builds and creates the dialog
+        dlg.show(getSupportFragmentManager(), "add_task");//shows the dialog with the help of a fragment manager and a tag that just helps the home activity stay connected to the dialog (the type of dialog is specified by the task passed earlier (null or not))
     }
 
     private void openEditDialog(Task task) {

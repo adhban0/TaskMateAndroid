@@ -2,8 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="purple">#06402B</color>
-<!--  change to dark green  -->
+    <color name="dark_green">#06402B</color>
     <color name="task_due_soon_red">#FFCDD2</color>
     <color name="task_due_far_green">#C8E6C9</color>
     <color name="task_overdue_dark_red">#E57373</color>

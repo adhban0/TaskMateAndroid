@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.taskmate" />
+                  <option name="mobileSdkAppId" value="1:28791598008:android:7622f05161f08c8c953d4d" />
+                  <option name="projectId" value="taskmate-raafat" />
+                  <option name="projectNumber" value="28791598008" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

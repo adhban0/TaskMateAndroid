@@ -13,7 +13,7 @@
         >
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            android:background="@color/purple"
+            android:background="@color/dark_green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="TaskMate"
@@ -22,7 +22,7 @@
             android:paddingTop="18dp"
             />
     </com.google.android.material.appbar.AppBarLayout>
-<!--container for toolbar to enable features like the bar collapsing or hiding as the user scrolls through content, toolbar, makes height the standard height of any toolbar-->
+<!--container for toolbar to enable features like the bar collapsing or hiding as the user scrolls through content, toolbar-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTasks"
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="@color/dark_green"
         app:tint="@color/white"
         app:srcCompat="@android:drawable/ic_input_add"
         app:layout_anchor="@id/rvTasks"

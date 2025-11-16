@@ -4,8 +4,8 @@
 
     <stroke
         android:width="3dp"
-        android:color="@color/purple"/>
+        android:color="@color/dark_green"/>
     <corners
         android:radius="20dp"/>
 </shape>
-<!--a graphic resource, used as background to elements, stroke is border-->
+<!--a graphic rectangle resource, used as background to elements, stroke is border-->
