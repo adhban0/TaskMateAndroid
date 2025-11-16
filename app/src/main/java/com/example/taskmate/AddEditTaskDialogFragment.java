@@ -13,6 +13,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class AddEditTaskDialogFragment extends DialogFragment {
     //h
 
     private EditText etTitle;
+    private SwitchCompat switchDueDate; // <-- Add Switch reference
     private DatePicker dpDue;
 
     //creates dialog fragments
@@ -52,6 +54,7 @@ public class AddEditTaskDialogFragment extends DialogFragment {
         LayoutInflater li = LayoutInflater.from(getContext());
         View v = li.inflate(R.layout.dialog_add_task, null);
         etTitle = v.findViewById(R.id.etTaskTitle);
+        switchDueDate = v.findViewById(R.id.switchDueDate); // <-- Initialize Switch
         dpDue = v.findViewById(R.id.datePicker);
         long now = System.currentTimeMillis();
         dpDue.setMinDate(now);
@@ -63,15 +66,18 @@ public class AddEditTaskDialogFragment extends DialogFragment {
             if (title != null) etTitle.setText(title);
 
             if (due != null) {
+                switchDueDate.setChecked(true);
+                dpDue.setVisibility(View.VISIBLE);
                 try {
                     LocalDateTime ldt = LocalDateTime.parse(due, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    // DatePicker month is 0-based, LocalDateTime month is 1-based
                     dpDue.updateDate(ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth());
                 } catch (Exception ex) {
                 }
             }
         }
-
+        switchDueDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            dpDue.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(v)
                 .setTitle(args != null && args.containsKey(ARG_TASK_ID) ? "Edit task" : "Add task")
@@ -89,11 +95,13 @@ public class AddEditTaskDialogFragment extends DialogFragment {
                     return;
                 }
 
-                int day = dpDue.getDayOfMonth();
-                int monthZeroBased = dpDue.getMonth();
-                int year = dpDue.getYear();
-                LocalDateTime due = LocalDateTime.of(year, monthZeroBased + 1, day, 0, 0, 0);
-
+                LocalDateTime due = null;
+                if (switchDueDate.isChecked()) {
+                    int day = dpDue.getDayOfMonth();
+                    int monthZeroBased = dpDue.getMonth();
+                    int year = dpDue.getYear();
+                    due = LocalDateTime.of(year, monthZeroBased + 1, day, 0, 0, 0);
+                }
                 int id = args != null && args.containsKey(ARG_TASK_ID) ? args.getInt(ARG_TASK_ID) : 0;
                 // username will be set by MainActivity when saving
                 Task t = new Task(id, title, due, false, "");

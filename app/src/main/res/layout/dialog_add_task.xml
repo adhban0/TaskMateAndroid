@@ -10,12 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Title" />
-
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchDueDate"
+        android:layout_width="match_parent"
+android:layout_height="wrap_content"
+        android:text="Set Due Date"
+        android:layout_marginTop="16dp"/>
     <DatePicker
         android:id="@+id/datePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:theme="@style/CustomDatePickerTheme"
+        android:calendarViewShown="false"
+        android:visibility="gone"
         />
 
 </LinearLayout>
