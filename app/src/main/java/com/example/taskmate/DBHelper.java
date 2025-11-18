@@ -112,7 +112,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     COL_TASK_USERNAME + " = ?",
                     new String[]{username},
                     null, null,
-                    COL_TASK_DUE + " ASC");
+                    COL_TASK_DUE + " ASC NULLS LAST");
             if (c != null && c.moveToFirst()) {
                 do {
                     int id = c.getInt(c.getColumnIndexOrThrow(COL_TASK_ID));// throws an exception
@@ -129,6 +129,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
         return list;
     }
+
 
     public int updateTaskCompletion(int taskId, boolean isCompleted) {
         SQLiteDatabase db = this.getWritableDatabase();
